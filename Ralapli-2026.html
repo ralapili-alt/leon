@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财务决策框架 · Ralapli · 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1814;
+  --ink-2: #3d3830;
+  --ink-3: #7a7268;
+  --ink-4: #b0a99e;
+  --paper: #f7f4ef;
+  --paper-2: #ede9e2;
+  --paper-3: #e2ddd5;
+  --gold: #b8922a;
+  --gold-light: #f5e8c8;
+  --red: #9b2c2c;
+  --red-light: #fdeaea;
+  --green: #2d6a4f;
+  --green-light: #e8f5ee;
+  --blue: #1a4a7a;
+  --blue-light: #e8f0f8;
+  --amber: #92600a;
+  --amber-light: #fef3dc;
+  --serif: 'Noto Serif SC', serif;
+  --sans: 'Noto Sans SC', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* 顶部标题区 */
+.masthead {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 2.5rem 2rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.masthead::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 40%;
+  background: linear-gradient(135deg, transparent 0%, rgba(184,146,42,0.08) 100%);
+}
+.masthead-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  position: relative;
+}
+.masthead-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .15em;
+  color: var(--ink-4);
+  text-transform: uppercase;
+  margin-bottom: .5rem;
+}
+.masthead-title {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  color: var(--paper);
+  margin-bottom: .3rem;
+}
+.masthead-sub {
+  font-size: 13px;
+  color: var(--ink-4);
+}
+.version-tag {
+  display: inline-block;
+  background: var(--gold);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 2px;
+  margin-left: .75rem;
+  vertical-align: middle;
+}
+
+/* 布局 */
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* 章节 */
+.section {
+  margin-bottom: 2.5rem;
+}
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: .75rem;
+  margin-bottom: 1rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--paper-3);
+}
+.section-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--gold);
+  letter-spacing: .1em;
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.section-updated {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-4);
+}
+
+/* 指标卡 */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: .75rem;
+  margin-bottom: 1.25rem;
+}
+.metric-card {
+  background: var(--paper-2);
+  border: 1px solid var(--paper-3);
+  border-radius: 6px;
+  padding: .9rem 1rem;
+}
+.metric-label {
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-bottom: .25rem;
+}
+.metric-value {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.metric-note {
+  font-size: 11px;
+  color: var(--ink-4);
+  margin-top: .2rem;
+}
+.metric-card.highlight {
+  background: var(--gold-light);
+  border-color: rgba(184,146,42,0.3);
+}
+.metric-card.highlight .metric-value { color: var(--gold); }
+.metric-card.warn {
+  background: var(--amber-light);
+  border-color: rgba(146,96,10,0.2);
+}
+.metric-card.warn .metric-value { color: var(--amber); }
+.metric-card.risk {
+  background: var(--red-light);
+  border-color: rgba(155,44,44,0.2);
+}
+.metric-card.risk .metric-value { color: var(--red); }
+
+/* 表格 */
+.table-wrap {
+  border: 1px solid var(--paper-3);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+thead tr {
+  background: var(--paper-2);
+}
+th {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--ink-3);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--paper-3);
+  white-space: nowrap;
+}
+td {
+  padding: 9px 12px;
+  border-bottom: .5px solid var(--paper-3);
+  color: var(--ink-2);
+  vertical-align: top;
+  line-height: 1.55;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(0,0,0,.015); }
+.num { font-family: var(--mono); font-size: 13px; }
+
+/* 标签 */
+.tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 7px;
+  border-radius: 3px;
+  white-space: nowrap;
+  font-family: var(--mono);
+}
+.tag-g { background: var(--green-light); color: var(--green); }
+.tag-r { background: var(--red-light); color: var(--red); }
+.tag-a { background: var(--amber-light); color: var(--amber); }
+.tag-b { background: var(--blue-light); color: var(--blue); }
+.tag-gold { background: var(--gold-light); color: var(--gold); }
+
+/* 提示框 */
+.callout {
+  border-radius: 6px;
+  padding: .85rem 1.1rem;
+  margin-bottom: 1rem;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.callout-warn {
+  background: var(--amber-light);
+  border-left: 3px solid var(--amber);
+  color: var(--ink-2);
+}
+.callout-risk {
+  background: var(--red-light);
+  border-left: 3px solid var(--red);
+  color: var(--ink-2);
+}
+.callout-ok {
+  background: var(--green-light);
+  border-left: 3px solid var(--green);
+  color: var(--ink-2);
+}
+.callout-info {
+  background: var(--blue-light);
+  border-left: 3px solid var(--blue);
+  color: var(--ink-2);
+}
+.callout strong { font-weight: 500; }
+
+/* 决策树 */
+.decision-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+  margin-bottom: 1rem;
+}
+.decision-card {
+  background: var(--paper-2);
+  border: 1px solid var(--paper-3);
+  border-radius: 6px;
+  padding: 1rem;
+}
+.decision-title {
+  font-family: var(--serif);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: .5rem;
+}
+.decision-body {
+  font-size: 12px;
+  color: var(--ink-3);
+  line-height: 1.6;
+}
+
+/* 原则列表 */
+.principles {
+  counter-reset: p;
+  list-style: none;
+}
+.principles li {
+  counter-increment: p;
+  display: flex;
+  gap: .75rem;
+  padding: .7rem 0;
+  border-bottom: .5px solid var(--paper-3);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.principles li:last-child { border-bottom: none; }
+.principles li::before {
+  content: counter(p, decimal-leading-zero);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--gold);
+  min-width: 24px;
+  margin-top: 2px;
+}
+
+/* 桶系统 */
+.bucket-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .75rem;
+  margin-bottom: 1rem;
+}
+.bucket {
+  border: 1px solid var(--paper-3);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.bucket-head {
+  padding: .7rem .9rem;
+  font-size: 12px;
+  font-weight: 500;
+}
+.bucket-a .bucket-head { background: #e8f0f8; color: var(--blue); }
+.bucket-b .bucket-head { background: var(--amber-light); color: var(--amber); }
+.bucket-c .bucket-head { background: var(--green-light); color: var(--green); }
+.bucket-body {
+  background: var(--paper-2);
+  padding: .75rem .9rem;
+}
+.bucket-amount {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: .3rem;
+}
+.bucket-desc {
+  font-size: 11px;
+  color: var(--ink-3);
+  line-height: 1.5;
+}
+
+/* 时间线 */
+.timeline {
+  position: relative;
+  padding-left: 1.5rem;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: var(--paper-3);
+}
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.25rem;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.5rem;
+  top: 6px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--paper-2);
+  border: 2px solid var(--gold);
+}
+.timeline-item.done::before { background: var(--gold); }
+.timeline-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-4);
+  margin-bottom: .2rem;
+  letter-spacing: .05em;
+}
+.timeline-content {
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+
+/* 分隔线 */
+hr { border: none; border-top: 1px solid var(--paper-3); margin: 1.5rem 0; }
+
+/* 底部 */
+.footer {
+  background: var(--paper-2);
+  border-top: 1px solid var(--paper-3);
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  font-size: 11px;
+  color: var(--ink-4);
+  line-height: 1.8;
+}
+
+/* 响应式 */
+@media (max-width: 640px) {
+  .decision-grid { grid-template-columns: 1fr; }
+  .bucket-row { grid-template-columns: 1fr; }
+  .metrics-row { grid-template-columns: 1fr 1fr; }
+  .masthead-title { font-size: 22px; }
+}
+
+/* 双栏 */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 640px) {
+  .two-col { grid-template-columns: 1fr; }
+}
+
+.subsection-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  color: var(--ink-4);
+  text-transform: uppercase;
+  margin-bottom: .5rem;
+  margin-top: 1.25rem;
+}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-label">Personal Finance Framework · Private & Confidential</div>
+    <div class="masthead-title">财务决策框架<span class="version-tag">v1.0 · 2026.06</span></div>
+    <div class="masthead-sub">基于价值投资原则 · 供个人决策参考，不构成投资建议 · 定期更新迭代</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- §1 财务全景 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§ 01</span>
+      <span class="section-title">财务全景快照</span>
+      <span class="section-updated">更新：2026年6月</span>
+    </div>
+
+    <div class="metrics-row">
+      <div class="metric-card highlight">
+        <div class="metric-label">滴滴期权（税前估算）</div>
+        <div class="metric-value">¥1000万</div>
+        <div class="metric-note">按$5估算 · 税后约¥550万(45%税)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">金融资产（流动）</div>
+        <div class="metric-value">~¥230万</div>
+        <div class="metric-note">货基70万 + A股55万 +支付10 + 港美股约$8万</div>
+      </div>
+      <div class="metric-card warn">
+        <div class="metric-label">房贷剩余本金（估算）</div>
+        <div class="metric-value">~¥195万</div>
+        <div class="metric-note">7年后到期 · 利率2.3% · 可续贷</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">月度净现金流</div>
+        <div class="metric-value">¥5.85万</div>
+        <div class="metric-note">薪资4万 + 租金1.5万 + IP约2000</div>
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <strong>关键洞察</strong>：净月供负担仅约¥2000（月供¥18,000 − 租金¥16,500）。房产近似于"零成本持有"。真正的流动性压力来自7年后的¥195万本金到期，但届时可通过续贷或滴滴套现覆盖。
+    </div>
+
+    <div class="subsection-label">持仓明细</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>类别</th><th>标的</th><th>持仓/估值</th><th>成本参考</th><th>当前状态</th><th>核心动作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A股</td>
+            <td><strong>贵州茅台</strong></td>
+            <td class="num">400股 · ~¥54万</td>
+            <td class="num">综合约¥1,395</td>
+            <td><span class="tag tag-a">小幅浮亏</span></td>
+            <td>核心持仓不动。¥1,200以下加仓；PE&gt;35倍减持</td>
+          </tr>
+          <tr>
+            <td>A股</td>
+            <td>其他ETF/零散</td>
+            <td class="num">~¥6万</td>
+            <td>—</td>
+            <td><span class="tag tag-a">混合</span></td>
+            <td>金额小，可忽略或逢反弹清理</td>
+          </tr>
+          <tr>
+            <td>港股</td>
+            <td><strong>腾讯</strong></td>
+            <td class="num">300股 · ~HK$13.8万</td>
+            <td class="num">HK$504</td>
+            <td><span class="tag tag-a">-8.7%</span></td>
+            <td>核心持仓。HK$400以下加仓；PE&gt;25倍减持</td>
+          </tr>
+          <tr>
+            <td>港股</td>
+            <td>美团</td>
+            <td class="num">400股 · ~HK$3.3万</td>
+            <td class="num">HK$113</td>
+            <td><span class="tag tag-r">-27%</span></td>
+            <td><strong>待处理</strong>：财报确认无改善→止损退出</td>
+          </tr>
+          <tr>
+            <td>美股</td>
+            <td>拼多多</td>
+            <td class="num">~$2.5万</td>
+            <td>—</td>
+            <td><span class="tag tag-a">观察中</span></td>
+            <td>等Q1财报确认增速再决策</td>
+          </tr>
+          <tr>
+            <td>美股</td>
+            <td>英伟达</td>
+            <td class="num">16股 · ~$3,150</td>
+            <td class="num">$177.5</td>
+            <td><span class="tag tag-g">+11%</span></td>
+            <td>$180-200区间加仓至50-60股</td>
+          </tr>
+          <tr>
+            <td>美股</td>
+            <td>BRK.B / VOO / 特斯拉</td>
+            <td class="num">~$1.3万</td>
+            <td>—</td>
+            <td><span class="tag tag-g">小幅盈利</span></td>
+            <td>持有。VOO持续定投。特斯拉零成本持有</td>
+          </tr>
+          <tr>
+            <td>定投</td>
+            <td><strong>纳斯达克100（021000）</strong></td>
+            <td class="num">持续买入中</td>
+            <td>—</td>
+            <td><span class="tag tag-b">执行中</span></td>
+            <td>每日打满¥2,000上限。政策收紧→切换513100</td>
+          </tr>
+          <tr>
+            <td>特殊</td>
+            <td><strong>滴滴期权</strong></td>
+            <td class="num">税前~¥1,000万</td>
+            <td>—</td>
+            <td><span class="tag tag-b">核心待解锁</span></td>
+            <td>见§03滴滴框架</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §2 现金管理 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§ 02</span>
+      <span class="section-title">现金管理：三桶系统</span>
+      <span class="section-updated">更新：2026年6月</span>
+    </div>
+
+    <div class="callout callout-warn">
+      <strong>核心原则</strong>：70万货基不是"一笔钱"，是三种用途的叠加。分桶之后，才能知道哪笔钱可以投市场、哪笔钱绝对不能动。
+    </div>
+
+    <div class="bucket-row">
+      <div class="bucket bucket-a">
+        <div class="bucket-head">🛡 桶A · 应急备用</div>
+        <div class="bucket-body">
+          <div class="bucket-amount">¥15万</div>
+          <div class="bucket-desc">3-4个月家庭支出<br>失业、医疗等突发<br><strong>放：货基/活期，绝不入市</strong></div>
+        </div>
+      </div>
+      <div class="bucket bucket-b">
+        <div class="bucket-head">📅 桶B · 中期专项</div>
+        <div class="bucket-body">
+          <div class="bucket-amount">¥30-35万</div>
+          <div class="bucket-desc">7年后房贷到期备用款<br>孩子近5年学费等<br><strong>放：货基/短期理财，绝不入市</strong></div>
+        </div>
+      </div>
+      <div class="bucket bucket-c">
+        <div class="bucket-head">🎯 桶C · 投资子弹</div>
+        <div class="bucket-body">
+          <div class="bucket-amount">¥20-25万</div>
+          <div class="bucket-desc">等核心标的击球区<br>长江电力¥25 / 茅台¥1200<br><strong>有估值锚才动，没到不动</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subsection-label">月度现金流分配（¥5.85万/月）</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>用途</th><th>金额</th><th>方式</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>纳指100定投（核心）</strong></td>
+            <td class="num">¥4.2万/月</td>
+            <td>021000每日¥2,000（约21交易日）</td>
+            <td>政策收紧→立刻切换513100场内ETF</td>
+          </tr>
+          <tr>
+            <td>桶B专项补充</td>
+            <td class="num">~¥1万/月</td>
+            <td>货基</td>
+            <td>用1-2年把桶B补至目标额</td>
+          </tr>
+          <tr>
+            <td>机动子弹</td>
+            <td class="num">~¥0.65万/月</td>
+            <td>货基积累</td>
+            <td>等茅台/腾讯击球区，无目标时留存</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsection-label">房贷提前还款判断</div>
+    <div class="two-col">
+      <div class="decision-card">
+        <div class="decision-title">🔴 不应该提前还款的情况</div>
+        <div class="decision-body">有纳指定投计划时：预期年化7-8% &gt;&gt; 房贷利率2.3%，钱更应该投市场。桶A/B/C尚未补满时：先把底盘建好。</div>
+      </div>
+      <div class="decision-card">
+        <div class="decision-title">🟢 可以提前还款的情况</div>
+        <div class="decision-body">桶C已满且无击球区时：提前还款=确定性2.3%无风险收益，优于货基1.5%。滴滴套现后有超额现金时：按优先级序列分配剩余。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §3 滴滴框架 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§ 03</span>
+      <span class="section-title">滴滴期权：套现框架</span>
+      <span class="section-updated">更新：2026年6月</span>
+    </div>
+
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-label">当前价格</div>
+        <div class="metric-value">$3.6</div>
+        <div class="metric-note">近1年区间：$3.6 – $6.9</div>
+      </div>
+      <div class="metric-card warn">
+        <div class="metric-label">目标套现区间</div>
+        <div class="metric-value">$5 – $6</div>
+        <div class="metric-note">1年内框架</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">税后估值（45%税率）</div>
+        <div class="metric-value">¥550万</div>
+        <div class="metric-note">按$5税前¥1000万计算</div>
+      </div>
+      <div class="metric-card highlight">
+        <div class="metric-label">上市后税率优化收益</div>
+        <div class="metric-value">+¥250万</div>
+        <div class="metric-note">45%→20%，同等税前收益多¥250万</div>
+      </div>
+    </div>
+
+    <div class="callout callout-risk">
+      <strong>最大风险</strong>：价格择时错误。$3.6与$6.9之间的差距意味着同等股票数量下收入相差近一倍。<strong>不要试图猜测顶部，应执行梯度纪律卖出。</strong>
+    </div>
+
+    <div class="subsection-label">老股卖出纪律（梯度执行）</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>价格区间</th><th>老股操作</th><th>新增股票</th><th>备注</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="num"><strong>$3.6（当前）</strong></td>
+            <td><span class="tag tag-r">不卖老股</span></td>
+            <td>首窗卖40-50%</td>
+            <td>低估区，持有等待</td>
+          </tr>
+          <tr>
+            <td class="num">$4.5以下</td>
+            <td><span class="tag tag-r">不卖老股</span></td>
+            <td>首窗卖40-50%</td>
+            <td>继续等待</td>
+          </tr>
+          <tr>
+            <td class="num">$5.0 – $5.5</td>
+            <td><span class="tag tag-a">每窗口卖5%</span></td>
+            <td>同上</td>
+            <td>约¥50万/窗口（按税前1000万估）</td>
+          </tr>
+          <tr>
+            <td class="num">$5.5 – $6.0</td>
+            <td><span class="tag tag-a">每窗口卖8-10%</span></td>
+            <td>同上</td>
+            <td>约¥80-100万/窗口，加速套现</td>
+          </tr>
+          <tr>
+            <td class="num">$6.0以上</td>
+            <td><span class="tag tag-g">每窗口卖10-15%</span></td>
+            <td>积极减持</td>
+            <td>接近历史高点$6.9，不要贪</td>
+          </tr>
+          <tr>
+            <td>上市后税率→20%</td>
+            <td colspan="2"><span class="tag tag-b">重新评估老股策略</span></td>
+            <td>税后额外多¥250万，等待价值大幅提升</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsection-label">套现资金用途优先级</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>优先级</th><th>用途</th><th>金额参考</th><th>逻辑</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag tag-r">① 最优先</span></td>
+            <td>补足桶A/B至目标额</td>
+            <td class="num">¥45-50万</td>
+            <td>先固定生活底盘，不受市场影响</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-a">② 次优先</span></td>
+            <td>纳指100 ETF（513100）大额买入</td>
+            <td class="num">¥150-200万</td>
+            <td>一次性买入历史上70%跑赢分批；越早越好</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-a">③</span></td>
+            <td>提前偿还房贷</td>
+            <td class="num">¥50-100万</td>
+            <td>降低负债；情绪价值也有意义</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-g">④ 等击球区</span></td>
+            <td>茅台¥1,200 / 腾讯HK$400 / 长江电力¥25</td>
+            <td class="num">剩余~¥100万</td>
+            <td>有估值锚才动，没到不动</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- §4 定投体系 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§ 04</span>
+      <span class="section-title">指数定投体系</span>
+      <span class="section-updated">更新：2026年6月</span>
+    </div>
+
+    <div class="callout callout-ok">
+      <strong>核心信仰</strong>：纳斯达克100定投是当前阶段最重要的单一动作。100年历史数据显示股市实际回报约4%/年，加通胀约7-8%名义回报。越早投、越多投，复利差距无法追回。
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="subsection-label">当前执行方案</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>要素</th><th>详情</th></tr></thead>
+            <tbody>
+              <tr><td>基金代码</td><td><strong>021000</strong>（南方纳斯达克100 I类）</td></tr>
+              <tr><td>每日上限</td><td class="num">¥2,000 /天</td></tr>
+              <tr><td>月度合计</td><td class="num">约¥4.2万/月（21交易日）</td></tr>
+              <tr><td>年化成本</td><td class="num">0.65%（管理0.5%+托管0.15%）</td></tr>
+              <tr><td>备选方案</td><td>513100 / 159661（场内ETF，无限额）</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="subsection-label">风险与应对</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>风险</th><th>应对</th></tr></thead>
+            <tbody>
+              <tr><td>021000额度政策收紧</td><td>立刻切换513100，当日可操作</td></tr>
+              <tr><td>失业导致现金流中断</td><td>立刻暂停定投，桶A撑3-4个月</td></tr>
+              <tr><td>市场大跌30%+</td><td>不停、不减，有余力时加倍买入</td></tr>
+              <tr><td>5年内急用钱</td><td>桶B专款专用，定投资金不挪用</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §5 核心标的击球区 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§ 05</span>
+      <span class="section-title">核心标的·击球区</span>
+      <span class="section-updated">更新：2026年6月</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>标的</th><th>当前价</th><th>开始买入</th><th>加大力度</th><th>卖出信号</th><th>逻辑一句话</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>贵州茅台</strong></td>
+            <td class="num">~¥1,360</td>
+            <td class="num">¥1,200</td>
+            <td class="num">¥1,000</td>
+            <td>PE&gt;35倍或股息率&lt;2%</td>
+            <td>品牌垄断，护城河极深，等价格</td>
+          </tr>
+          <tr>
+            <td><strong>腾讯</strong></td>
+            <td class="num">~HK$460</td>
+            <td class="num">HK$400</td>
+            <td class="num">HK$350</td>
+            <td>PE&gt;25倍</td>
+            <td>网络效应最深，平台已过最难时期</td>
+          </tr>
+          <tr>
+            <td><strong>英伟达</strong></td>
+            <td class="num">~$197</td>
+            <td class="num">$180-200</td>
+            <td class="num">$150</td>
+            <td>Forward PE&gt;40倍且增速放缓</td>
+            <td>AI产业链最上游垄断，CUDA生态锁定</td>
+          </tr>
+          <tr>
+            <td><strong>长江电力</strong></td>
+            <td class="num">~¥27</td>
+            <td class="num">¥25（股息率&gt;4.2%）</td>
+            <td class="num">¥22</td>
+            <td>股息率&lt;3%</td>
+            <td>水来发电，发电分红，护城河不可复制</td>
+          </tr>
+          <tr>
+            <td>纳斯达克100</td>
+            <td>—</td>
+            <td colspan="2">不择时，持续定投</td>
+            <td>不主动卖出</td>
+            <td>被动策略，买市场不买个股</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-info">
+      <strong>长江电力有效期</strong>：若¥25以下触发条件年内（2026年12月31日）未发生，则明年1月以当时市价分两批买入12-15万。等待有价值，但等待需要有纪律边界。
+    </div>
+  </div>
+
+  <!-- §6 投资原则 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§ 06</span>
+      <span class="section-title">不可违背的投资原则</span>
+    </div>
+
+    <ul class="principles">
+      <li>用每月盈余定投，用货基做安全垫——两件事绝不混用。定投的钱永远只来自增量收入，不动用存量。</li>
+      <li>没有估值锚的买入就是赌博。任何个股买入必须能回答：合理价值是多少，当前价格有多少安全边际。</li>
+      <li>能力圈边界：只投能用三句话说清商业模式的公司。"感觉对了"不等于"在能力圈内"。</li>
+      <li>单一标的不超过总权益资产30%。集中度超标时必须减持，无论当时是否在击球区。</li>
+      <li>跌50%还敢加仓才算真正理解。如果跌了会恐慌卖出，说明要么仓位太重，要么理解不够深。</li>
+      <li>卖出必须有明确理由。"怕跌"不是卖出理由。合法理由：基本面恶化、估值严重透支、有更好去处、不在能力圈。</li>
+      <li>大佬的操作不能直接抄。可以学方法论，不能照搬仓位——他们的总资产、风险承受力和你完全不同。</li>
+      <li>IP收入增长优先于仓位优化。在L3→L4阶段，提升可投资现金流的财富效应远大于选股alpha。</li>
+    </ul>
+  </div>
+
+  <!-- §7 行动时间线 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§ 07</span>
+      <span class="section-title">近期行动清单</span>
+      <span class="section-updated">2026年6月版</span>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item done">
+        <div class="timeline-label">已完成</div>
+        <div class="timeline-content">茅台加仓至400股 · 纳指定投每日¥2,000已启动 · 确认021000额度¥2,000/日</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-label">本周内</div>
+        <div class="timeline-content">确认021000定投已打满每日额度 · 开通券商账户备选513100，准备政策收紧后随时切换</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-label">本月内</div>
+        <div class="timeline-content">70万货基完成三桶分类（心理账户分离）· 美团：财报后无改善则止损退出</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-label">1年内核心</div>
+        <div class="timeline-content">滴滴：$5-$5.5时每窗口卖5%老股 → $5.5-$6时加速8-10% → $6以上积极减持 · 套现资金按§03优先级部署</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-label">2026年12月31日</div>
+        <div class="timeline-content">长江电力有效期截止。若¥25未触及，明年1月以市价分两批买入¥12-15万</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-label">持续跟踪</div>
+        <div class="timeline-content">关注滴滴上市时间线与税率变化 · PDD财报确认增速 · NVDA $180-200区间准备加仓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §8 本版本更新日志 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="section-num">§ 08</span>
+      <span class="section-title">版本更新日志</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>版本</th><th>日期</th><th>主要变化</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="tag tag-gold">v1.0</span></td>
+            <td>2026年6月</td>
+            <td>初始版本建立。整合Nick Maggiulli《Just Keep Buying》对话洞察；确立三桶现金管理；滴滴梯度卖出框架；纳指定投为核心动作；茅台更新为400股</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout callout-info" style="margin-top:.75rem">
+      <strong>如何更新这个文档</strong>：将此HTML文件发给Claude，说明变化的信息（价格、持仓、新决策、新认知），Claude会更新相关章节并输出新版本，版本号递增，更新日志追加。
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  本文档仅供个人投资决策参考，不构成任何投资建议。所有操作需自行判断，自负盈亏。<br>
+  Ralapli Personal Finance Framework · v1.0 · 2026年6月 · 定期与Claude迭代更新
+</div>
+
+</body>
+</html>
